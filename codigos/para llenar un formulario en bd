@@ -1,0 +1,48 @@
+  private void btn_guardarActionPerformed(java.awt.event.ActionEvent evt) {                                            
+        // con este boton cada vez que se llena el formulario de usuario se llena en la base de datos a la tabla usuario  
+        String usu = txt_usu.getText();
+        String cont = String.valueOf(txtp_contra.getPassword());
+        String nom = txt_nombre.getText();
+        String ape = txt_apellido.getText();
+        String cor = txt_correo.getText();
+        String rol = String.valueOf(cmbox_rol.getSelectedIndex());
+
+                
+        if(usu.equals(""))
+        {
+            JOptionPane.showMessageDialog(null, "Agrega un Usuario");
+        }
+        
+        else if(cont.equals(""))
+        {
+            JOptionPane.showMessageDialog(null, "Agrega una Contraseña");
+        }      
+        else if(RevisarUsuario(usu))
+        {
+            JOptionPane.showMessageDialog(null, "Este Usuario ya existe");
+        }
+        else{
+        PreparedStatement ps;
+        String query = "INSERT INTO `usuario_insert`(`usuario`, `nombre_usu`, `apellido_usu`, `contrasena`, `correo`, `rol`) VALUES (?,?,?,?,?,?)";
+        try {
+            ps = connection.getConnection().prepareStatement(query);
+            
+            ps.setString(1, usu);
+            ps.setString(2, nom);
+            ps.setString(3, ape);
+            ps.setString(4, cont);
+            ps.setString(5, cor);
+            ps.setString(6, rol);
+            if(ps.executeUpdate() > 0)
+            {
+                JOptionPane.showMessageDialog(null, "Nuevo Usuario Agregado");
+                limpiar();
+            }
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(frm_usu.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "error "+ex);
+            }
+        }
+        
+    }                                                                 
